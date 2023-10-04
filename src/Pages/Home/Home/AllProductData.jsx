@@ -5,8 +5,17 @@ import { Link } from "react-router-dom";
 const AllProductData = (props) => {
   // console.log(product);
   const { product } = props;
-  const { category, picture, rating, title, date, name, perNightCost, _id } =
-    product;
+  const {
+    category,
+    picture,
+    rating,
+    title,
+    date,
+    name,
+    perNightCost,
+    _id,
+    payment,
+  } = product;
   return (
     <div>
       <div className="card card-compact p-0  bg-base-100 shadow-xl rounded-lg">
@@ -29,9 +38,21 @@ const AllProductData = (props) => {
             <span className="font-bold">${perNightCost}</span> night
           </p>
           <div className="card-actions w-full">
-            <Link className="w-full" to={`/productDetails/${_id}`}>
-              <button className="btn bg-red-300 w-full">Buy Now</button>
-            </Link>
+            {payment ? (
+              <>
+                <Link className="w-full">
+                  <button className="btn bg-green-500 hover:bg-green-600 text-white w-full">
+                    Already Booked
+                  </button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link className="w-full" to={`/productDetails/${_id}`}>
+                  <button className="btn bg-red-300 hover:bg-red-300 w-full">Book Now</button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

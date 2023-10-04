@@ -3,11 +3,10 @@ import  { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './SignIn.css';
 import { AuthContext } from '../../../Context/AuthProvider';
-import { useGoogleLoginUserMutation } from '../../../Feature/users/usersApiSlice';
+
 
 const SignIn = () => {
     const { login, googleLogin } = useContext(AuthContext);
-    const [postGoogleUser] = useGoogleLoginUserMutation();
     // const location = useLocation();
     // const navigate = useNavigate();
     // const from = location.state?.from?.pathname || "/";
@@ -37,13 +36,13 @@ const SignIn = () => {
           const user = result.user;
           console.log(user);
         //   setLoginEmail(user.email);
-        //   toast.success("Login successfull!!");
+        
           alert("Login successfull!!");
           form.reset();
         //   navigate(from, {replace: true});
         })
         .catch((err) => {
-          toast.error(err.message);
+          console.log(err.message);
         });
       console.log(email, password);
     };
@@ -58,21 +57,22 @@ const SignIn = () => {
             role: "user",
           };
           
-          postGoogleUser(userData);
-          //   fetch(`https://resale-market-server-taupe.vercel.app/googleUsers`, {
-          //     method: "PUT",
-          //     headers: {
-          //       "content-type": "application/json",
-          //     },
-          //     body: JSON.stringify(userData),
-          //   })
-          //     .then((res) => res.json())
-          //     .then((data) => {
-          //       console.log(data);
-          //       setLoginEmail(userData.email);
-          //     });
+          
+            fetch(`http://localhost:5000/googleUsers`, {
+              method: "PUT",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                // setLoginEmail(userData.email);
+                alert("google login successfull!!")
+              });
 
-          console.log("userData", userData);
+          // console.log("userData", userData);
         })
         .catch((error) => console.log(error));
     };

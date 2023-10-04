@@ -2,17 +2,14 @@ import React from 'react';
 import  { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider';
-import { toast } from 'react-hot-toast';
-import { useAddUserMutation } from '../../../Feature/users/usersApiSlice';
+// import Swal from "sweetalert2";
+// const Swal = require("sweetalert2");
 
 
 
 const SignUp = () => {
   const { createUser, userUpdateHandler } = useContext(AuthContext);
   
-  //user post api
-  const [postUser, { isLoading, isError, isSuccess }] = useAddUserMutation();
-
   const navigete = useNavigate();
   // const [createEmail, setCreateEmail] = useState("");
   // console.log(createEmail);
@@ -58,33 +55,43 @@ const SignUp = () => {
               email: email,
               password: password,
               role: "user",
+              
             };
             console.log(userData);
-            postUser(userData);
+           
             
-            // fetch(`http://localhost:5000/users`, {
-            //   method: "POST",
-            //   headers: {
-            //     "content-type": "application/json",
+            fetch(`http://localhost:5000/users`, {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.insertedId) {
+                  console.log("post successfull!");
+                  // refetch();
+                }
+
+                // setCreateEmail(userData.email);
+              
+              });
+
+            // Swal.fire({
+            //   title: "Create Account Successfull !!",
+            //   showClass: {
+            //     popup: "animate__animated animate__fadeInDown",
             //   },
-            //   body: JSON.stringify(userData),
-            // })
-            //   .then((res) => res.json())
-            //   .then((data) => {
-            //     if (data.insertedId) {
-            //       console.log("post successfull!");
-            //     }
-
-            //     // if(data.in)
-            //     // setCreateEmail(userData.email);
-            //   });
-
-            //   toast.success("Created account successfull!");
-            alert("Created account successfull!");
+            //   hideClass: {
+            //     popup: "animate__animated animate__fadeOutUp",
+            //   },
+            // });
+            alert("account successfull !!")
             form.reset();
             //   navigete('/');
           })
-          .catch((error) => toast.error(error.message));
+          .catch((error) => console.log(error.message));
       });
 
     //   console.log(email,  image);
@@ -97,9 +104,7 @@ const SignUp = () => {
   //     })
   //     .catch((err) => console.log(err));
   // };
-  if (isSuccess) {
-    console.log("post successfull!");
-  }
+  
   return (
     <div>
       <div className="hero bg-white min-h-screen loginBackgroud ">

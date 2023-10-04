@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 // import { format } from 'date-fns';
-import HomeCategory from './HomeCategory';
-import AllProductData from './AllProductData';
-import { HomeIcon, BuildingOffice2Icon, HomeModernIcon } from '@heroicons/react/24/solid'
-import { useLocation } from 'react-router-dom';
+import HomeCategory from "./HomeCategory";
+import AllProductData from "./AllProductData";
+import {
+  HomeIcon,
+  BuildingOffice2Icon,
+  HomeModernIcon,
+} from "@heroicons/react/24/solid";
+import { useLocation } from "react-router-dom";
 import Modal from "react-modal";
-import { useCategoryByProductsQuery, useGetAllProductsQuery, useGetCategoryQuery, useSearchByProductsQuery } from '../../../Feature/Products/productsApiSlice';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { resetSearchQuery } from '../../../Feature/Products/ProductSlice';
-// import { useCategoryByProductsQuery, useGetAllProductsQuery, useGetCategoryQuery } from '../../../Feature/api/apiSlice';
-
-
+// import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../SharedPage/Loading/Loading";
 
 const customStyles = {
   content: {
@@ -21,20 +21,18 @@ const customStyles = {
     bottom: "auto",
     // marginRight: "-10%",
     transform: "translate(-50%, -50%)",
-    padding:"0px"
-
+    padding: "0px",
   },
 };
-// 
-
+//
 
 const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);
   // const dispatch = useDispatch();
   let { state } = useLocation();
   // const [searchData, setSearchData] = useState(state);
-  // const [categorys, setCategorys] = useState([]);
-  // const [allProductData, setAllProductData] = useState([]);
+  const [categorys, setCategorys] = useState([]);
+  const [allProductData, setAllProductData] = useState([]);
   const [categoryText, setCategoryText] = useState("");
   const [allCategoryData, setAllCategoryData] = useState([]);
   const [rangeValue, setRangeValue] = useState(50);
@@ -47,144 +45,9 @@ const Home = () => {
   const [propertyState, setPropertyState] = useState("House");
   const [filterSearch, setFilterSearch] = useState({});
 
- 
-
-
-
-  let productItems = [];
-
-  //all category get api
-  const {
-    data: categorys,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetCategoryQuery();
- 
-
   
+console.log(allProductData)
 
-  // 
-  const { data: singleCategoryProductData } =
-    useCategoryByProductsQuery(categoryText);
-  // productItems = singleCategoryProductData;
-
-
-  const {
-    data: allProductData,
-    isLoading: productisLoading,
-    isSuccess: productisSuccess,
-    isError: productisError,
-    error: productError,
-  } = useGetAllProductsQuery();
-  // productItems = allProductData;
-  // console.log("productItems", productItems);
-  
-  // setAllProductData(allProductsData);
-// const data = useSelector((state) => state.search.query);
-// console.log("search",data)
-
-
-  const { data: searchDataProduct } = useSearchByProductsQuery(state);
-
-console.log("search data",state)
-// console.log("searchData", searchDataProduct);
-
-// console.log("state",state)
-// console.log("categoryText", categoryText);
-
-if (searchDataProduct?.length > 0) {
-  productItems = searchDataProduct;
-  // setCategoryText(null);
-  // console.log("searchDataProduct", productItems);
-} 
-else if (singleCategoryProductData?.length > 0) {
-  // state = null;
-  //  setSeardat(null);
-  productItems = singleCategoryProductData;
-  // console.log("singleCategoryProductData", productItems);
-} 
-else  {
-  productItems = allProductData;
-  //  setItems(true);
-  console.log("allProductData", productItems);
-}
-  //  productItems = allProductData;
-// console.log("allProductData", productItems);
-// console.log("singleCategoryProductData", productItems);
-// console.log("searchDataProduct", productItems);
-
-
-
-
-
-
-
-// useEffect(() => {
-   
-//    if (singleCategoryProductData?.length) {
-//      setStat2(singleCategoryProductData);
-//      setStat1([]);
-//      setStat3([]);
-//      console.log("category data data");
-//      return;
-//    }
-//    if (searchDataProduct?.length) {
-//      setStat3(searchDataProduct);
-//      setStat1([]);
-//      setStat2([]);
-
-//      console.log("search  data");
-//      return;
-//    }
-//    if (allProductData?.length) {
-//      setStat1(allProductData);
-//      setStat2([]);
-//      setStat3([]);
-//      console.log("allproduct data");
-//      return;
-//    }
-   
-  
-// }, [allProductData, singleCategoryProductData, searchDataProduct]);
-
-
-// if (stat3?.length) {
-//   product = stat3?.map((product) => (
-//     <AllProductData key={product._id} product={product}></AllProductData>
-//   ));
-//   setStat1([]);
-//   setStat2([]);
-// }
-// if (stat2?.length) {
-//   product = stat2?.map((product) => (
-//     <AllProductData key={product._id} product={product}></AllProductData>
-//   ));
-
-//   setStat1([]);
-//   setStat3([]);
-// }
-// if (stat1?.length) {
-//   product = stat1?.map((product) => (
-//     <AllProductData key={product._id} product={product}></AllProductData>
-//   ));
-//   console.log("data....");
-//   setStat2([]);
-//   setStat3([]);
-// }
-
-
-
-// console.log("stat1", stat1);
-// console.log("stat2", stat2);
-
-
-
-
-
-
-  // console.log(roomState, bedState, bathroomState, propertyState,modalBtn);
 
   //modal code start
   let subtitle;
@@ -218,52 +81,65 @@ else  {
     setIsOpen(false);
   };
 
-  // useEffect(()=>{
-  //     fetch('http://localhost:5000/allCategory')
-  // .then(res => res.json())
-  // .then(data => setCategorys(data))
 
-  // },[])
 
-  // useEffect(()=>{
-  //     fetch('http://localhost:5000/allProductData')
-  // .then(res => res.json())
-  // .then(data => setAllProductData(data))
+  const allProductHandler =()=>{
+      fetch("http://localhost:5000/allProductData")
+        .then((res) => res.json())
+        .then((data) => setAllProductData(data));
+    
 
-  // },[])
+  }
 
-  // useEffect(()=>{
-  //     if(categoryText){
-  //         // fetch(`http://localhost:5000/singleCategoryData/?category=${categoryText}`)
-  //     fetch(`http://localhost:5000/singleCategoryData/${categoryText}`)
-  //     .then(res => res.json())
-  //     .then(data => setAllProductData(data))
-  //     }
-  // },[categoryText])
 
-  // useEffect(() => {
-  //   if (state) {
-  //     const { location, adults, children, startTime, endDate } = state;
-  //     const dateTimeSet = `${startTime}-${endDate}`;
-  //     fetch(
-  //       `http://localhost:5000/searchData/?location=${location}&adults=${adults}&children=${children}&dateTimeSet=${dateTimeSet}`
-  //     )
-  //       .then((res) => res.json())
-  //       .then((data) => setAllProductData(data));
-  //   }
-  // }, [state]);
 
-  // useEffect(() => {
-  //   if (filterSearch) {
-  //     const { modalBtn, roomState, bedState, bathroomState, propertyState } =
-  //       filterSearch;
-  //     fetch(
-  //       `http://localhost:5000/searchFillter/?modalBtn=${modalBtn}&roomState=${roomState}&bedState=${bedState}&bathroomState=${bathroomState}&propertyState=${propertyState}`
-  //     )
-  //       .then((res) => res.json())
-  //       .then((data) => setAllProductData(data));
-  //   }
-  // }, [filterSearch]);
+  useEffect(() => {
+    fetch("http://localhost:5000/allCategory")
+      .then((res) => res.json())
+      .then((data) => setCategorys(data));
+  }, []);
+
+  
+  
+
+  useEffect(() => {
+    fetch("http://localhost:5000/allProductData")
+      .then((res) => res.json())
+      .then((data) => setAllProductData(data));
+  }, []);
+
+  useEffect(() => {
+    if (categoryText) {
+      // fetch(`http://localhost:5000/singleCategoryData/?category=${categoryText}`)
+      fetch(`http://localhost:5000/singleCategoryData/${categoryText}`)
+        .then((res) => res.json())
+        .then((data) => setAllProductData(data));
+    }
+  }, [categoryText]);
+
+  useEffect(() => {
+    if (state) {
+      const { location, adults, children, dateTimeSet } = state;
+      // const dateTimeSet = `${startTime}-${endDate}`;
+      fetch(
+        `http://localhost:5000/searchData/?location=${location}&adults=${adults}&children=${children}&dateTimeSet=${dateTimeSet}`
+      )
+        .then((res) => res.json())
+        .then((data) => setAllProductData(data));
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (filterSearch) {
+      const { modalBtn, roomState, bedState, bathroomState, propertyState } =
+        filterSearch;
+      fetch(
+        `http://localhost:5000/searchFillter/?modalBtn=${modalBtn}&roomState=${roomState}&bedState=${bedState}&bathroomState=${bathroomState}&propertyState=${propertyState}`
+      )
+        .then((res) => res.json())
+        .then((data) => setAllProductData(data));
+    }
+  }, [filterSearch]);
   // console.log(roomState, bedState, bathroomState, propertyState,modalBtn);
 
   const fristFilter = [
@@ -414,6 +290,7 @@ else  {
   return (
     <div>
       <div className=" flex justify-center items-center py-3 mb-2">
+        <button onClick={allProductHandler} className="bg-red-300 text-black hover:text-white px-5 mr-2 py-2 rounded ">All</button>
         {categorys?.map((data) => (
           <HomeCategory
             key={data._id}
@@ -422,26 +299,31 @@ else  {
           ></HomeCategory>
         ))}
 
-        <button className="btn ml-16" onClick={openModal}>
+        <button className="btn ml-16 bg-red-800 hover:bg-slate-900 text-white" onClick={openModal}>
           Filter
         </button>
       </div>
       <div className="pb-10">
-       
         <div>
-          {productItems?.length && (
-            <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-5 ">
-              {productItems?.map((product) => (
-                <AllProductData
-                  key={product._id}
-                  product={product}
-                ></AllProductData>
-              ))}
-            </div>
+          {allProductData?.length ? (
+            <>
+              <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-5 ">
+                {allProductData?.map((product) => (
+                  <AllProductData
+                    key={product._id}
+                    product={product}
+                  ></AllProductData>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-center items-center h-80">
+                <Loading />
+              </div>
+            </>
           )}
         </div>
-
-
       </div>
 
       {/* modal popup  */}

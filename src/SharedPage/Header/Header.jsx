@@ -6,7 +6,7 @@ import { UserCircleIcon, GlobeAltIcon, CalendarIcon, PlusIcon, MinusIcon } from 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AuthContext } from '../../Context/AuthProvider';
-import { toast } from 'react-hot-toast';
+
 // import { useDispatch } from 'react-redux';
 // import { setSearchQuery } from '../../Feature/Products/ProductSlice';
 // import { navigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ const Header = () => {
     const logOutHandler = () => {
       logOut()
         .then(() => {
-          // toast.success("Logout successfull!");
+          
           alert("Logout successfull!");
         })
         .catch((error) => console.log(error));
@@ -56,16 +56,16 @@ const Header = () => {
     }
     // console.log(query)
     return (
-      <div>
+      <div className='  '>
         <div>
           <div className="navbar bg-base-100 py-5">
             <div className="flex-1">
               <Link to="/">
-                {/* <img className="w-100 h-10" src={logo} alt="image" /> */}
+                <img className="w-100 h-10" src={logo} alt="image" />
               </Link>
             </div>
             <div className="flex-1 hidden lg:block">
-              <ul className="flex shadow px-3 rounded-full p-2">
+              <ul className="flex shadow px-3 rounded-full p-2  md:w-[400px]">
                 <li className=" border-r-4 border-b-slate-400 pr-5">
                   {open ? (
                     <Link className="text-black ">Stays </Link>
@@ -116,7 +116,14 @@ const Header = () => {
             </div>
 
             <div className="flex-none gap-2">
-              <div className="hidden lg:block lg:ml-44">
+              <div className="hidden lg:block lg:ml-32">
+                <span className=" ">
+                  {user?.email && (
+                    <Link className="bg-red-300 px-5 pt-1 pb-2 rounded-full text-white font-bold" to="/dashboard">
+                      Dashboard
+                    </Link>
+                  )}
+                </span>
                 {user?.email && user?.photoURL ? (
                   <>
                     <button
